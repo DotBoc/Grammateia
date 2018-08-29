@@ -31,6 +31,22 @@ public class LoginChecker extends HttpServlet {
 
 		if (DBUtils.validate(username, password)) {
 			
+			switch(DBUtils.getrole(username)) {
+				
+			case "Gram" : 
+			
+			case "Student" :
+			
+			case "Professor" :
+			
+			case "error" :
+				
+			default:	
+			
+			}
+			
+			
+			
 			HttpSession session = request.getSession();
 			session.setAttribute("username", username);			
 			session.setMaxInactiveInterval(5 * 60);

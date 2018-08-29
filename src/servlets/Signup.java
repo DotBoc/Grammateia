@@ -32,7 +32,7 @@ public class Signup extends HttpServlet {
 		String department = request.getParameter("department");
 
 		if (DBUtils.checkUsername(username)) {
-			if (DBUtils.register(username, password, name, surname, department)) {
+			if (DBUtils.register(username, password, name, surname, department,"Gram")) {
 				RequestDispatcher rd = request.getRequestDispatcher("Profile");
 				rd.forward(request, response);
 			} else {

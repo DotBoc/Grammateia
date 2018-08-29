@@ -32,7 +32,7 @@ public class SignupProfessor extends HttpServlet {
 		String email = request.getParameter("email");
 		
 		if (DBUtils.checkUsername(username)) {
-			if (DBUtils.register(username, password, name, surname, department,email)) {
+			if (DBUtils.registerP(username, password, name, surname, department,"Professor",email)) {
 				RequestDispatcher rd = request.getRequestDispatcher("ProfessorMenu.jsp");
 				rd.forward(request, response);
 			} else {

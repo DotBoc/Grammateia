@@ -40,7 +40,7 @@ public class DBUtils {
 		return availiable;
 	}
 
-	public static boolean register(String username, String password, String name, String surname, String department) {
+	public static boolean register(String username, String password, String name, String surname, String department,String role) {
 		boolean registered = false;
 		try {
 
@@ -49,12 +49,13 @@ public class DBUtils {
 			String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
 
 			Connection con = SQLConnUtils.getSQLConnection();
-			PreparedStatement ps = con.prepareStatement("insert into GUser values(?,?,?,?,?)");
+			PreparedStatement ps = con.prepareStatement("insert into GUser values(?,?,?,?,?,?)");
 			ps.setString(1, username);
 			ps.setString(2, hashed);
 			ps.setString(3, name);
 			ps.setString(4, surname);
 			ps.setInt(5, department_id);
+			ps.setString(6, role);
 
 			int i = ps.executeUpdate();
 
@@ -69,7 +70,7 @@ public class DBUtils {
 		return registered;
 	}
 
-	public static boolean register(String username, String password, String name, String surname, String department,
+	public static boolean register(String username, String password, String name, String surname, String department,String role,
 			String registration_number, String gender, String semester) {
 		boolean registered = false;
 		int gUser_ID = 0;
@@ -78,7 +79,7 @@ public class DBUtils {
 
 			int semester_numerical = Integer.parseInt(semester);
 
-			if (register(username, password, name, surname, department)) {
+			if (register(username, password, name, surname, department,role)) {
 
 				Connection con = SQLConnUtils.getSQLConnection();
 				PreparedStatement ps = con.prepareStatement("Select GUser_ID from GUser where GUser_username=?");
@@ -117,14 +118,14 @@ public class DBUtils {
 		return registered;
 	}
 
-	public static boolean register(String username, String password, String name, String surname, String department,
+	public static boolean registerP(String username, String password, String name, String surname, String department,String role,
 			String email) {
 		boolean registered = false;
 		int gUser_ID = 0;
 
 		try {
 
-			if (register(username, password, name, surname, department)) {
+			if (register(username, password, name, surname, department,role)) {
 
 				Connection con = SQLConnUtils.getSQLConnection();
 				PreparedStatement ps = con.prepareStatement("Select GUser_ID from GUser where GUser_username=?");
@@ -183,7 +184,7 @@ public class DBUtils {
 				String gUser_surname = rs.getString("GUser_surname");
 				int gUser_department = rs.getInt("GUser_department");
 				
-				Users user = new Users(gUser_ID ,gUser_username, gUser_name,gUser_surname, gUser_department);
+				//Users user = new Users(gUser_ID ,gUser_username, gUser_name,gUser_surname, gUser_department);
 
 				System.out.println(gUser_password_hashed);
 
@@ -198,18 +199,31 @@ public class DBUtils {
 			System.out.println("Error : " + ex);
 		}
 		return status;
-	}
-	
-	public static int rolechecker(int gUser_ID) {
-		int role = 0;
+	}	
+
+
+	public static String getrole(String username) {
+		String role = "error";
 		
-		Users.getUsersID
+		try {
+
+			Connection con = SQLConnUtils.getSQLConnection();
+			System.out.println("# - Starting Validation");
+
+			PreparedStatement ps = con.prepareStatement("Select GUser_role from GUser where GUser_username=?");
+			ps.setString(1, username);
 		
+			ResultSet rs = ps.executeQuery();
+			System.out.println("# - Query executed");
+			while (rs.next()) {
+				
+				role = rs.getString("GUser_role");
+			}
 		
-		
-		
+		} catch (Exception ex) {
+			System.out.println("Error : " + ex);
+		}
 		return role;
-		
 	}
 
 }

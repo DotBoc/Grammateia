@@ -35,7 +35,7 @@ public class SignupStudent extends HttpServlet {
 		String semester = request.getParameter("semester");
 
 		if (DBUtils.checkUsername(username)) {
-			if (DBUtils.register(username, password, name, surname, department,registration_number,gender,semester)) {
+			if (DBUtils.register(username, password, name, surname, department,"Student",registration_number,gender,semester)) {
 				RequestDispatcher rd = request.getRequestDispatcher("StudentsMenu.jsp");
 				rd.forward(request, response);
 			} else {

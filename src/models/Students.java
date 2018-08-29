@@ -25,7 +25,7 @@ public class Students extends Users {
 	}
 	
 	
-	public Students(String username, String password, String name, String surname, String department, String gender, int registrationNumber) {
+	public Students(String username, String password, String name, String surname, int department, String gender, int registrationNumber) {
 		super(username, password, name, surname, department);
 		this.setGender(gender);
 		try {
