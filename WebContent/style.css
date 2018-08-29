@@ -6,11 +6,12 @@ ul{
 	margin: 0px;
     padding: 0px;
     list-style: none;
+    width: 100%;
 }
 ul li{
 	float: left;
-    width: 400px;
-    height: 40px;
+    width: 25%;
+    height: 5%;
     background-color: black;
     opacity: .8;
     line-height: 40px;
@@ -26,6 +27,7 @@ ul li a:hover {
 	background-color: green;
 }
 ul li ul li{
+	width: 100%;
 	display: none;
 }	
 ul li:hover ul li{
