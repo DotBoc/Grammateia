@@ -22,7 +22,7 @@ public class Professors extends Users {
 		Email = email;
 	}
 	
-	public Professors(String username, String password, String name, String surname, String department, String email, String teachingSubject) {
+	public Professors(String username, String password, String name, String surname, int department, String email, String teachingSubject) {
 		super(username, password, name, surname, department);		
 		this.setEmail(email);
 		this.setTeachingSubject(teachingSubject);

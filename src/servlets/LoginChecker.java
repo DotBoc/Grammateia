@@ -30,9 +30,12 @@ public class LoginChecker extends HttpServlet {
 		String password = request.getParameter("password");
 
 		if (DBUtils.validate(username, password)) {
+			
 			HttpSession session = request.getSession();
-			session.setAttribute("username", username);
+			session.setAttribute("username", username);			
 			session.setMaxInactiveInterval(5 * 60);
+			
+			
 			RequestDispatcher rd = request.getRequestDispatcher("StudentsMenu.jsp");
 			rd.forward(request, response);
 		} else {
