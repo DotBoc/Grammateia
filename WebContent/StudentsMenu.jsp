@@ -10,6 +10,7 @@
                 <li><a>Grades Summary</a></li>
             </ul>
         </li>  
+        <li><a>Subject Registration</a></li> 
         <li><a>Help</a></li>
         <li><a>Log Out</a></li>
     </ul>
