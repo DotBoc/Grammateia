@@ -26,6 +26,8 @@ public class LoginChecker extends HttpServlet {
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 
+		String page;
+		String role = "error";
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 
@@ -33,29 +35,51 @@ public class LoginChecker extends HttpServlet {
 			
 			switch(DBUtils.getrole(username)) {
 				
-			case "Gram" : 
+			case "Gram" :
+				page = "GramMenu.jsp";
+				role = "Gram";
+				break;
+							
 			
 			case "Student" :
+				page = "StudentsMenu.jsp";
+				role = "Student";
+				break;
 			
-			case "Professor" :
+			case "Professor" : 
+				page = "ProfessorMenu.jsp";
+				role = "Professor";
+				break;
 			
-			case "error" :
+			case "error" : 
+				page = "failed.html";
+				role = "error";
+				break;
 				
-			default:	
+			default: 
+				page = "failed.html";
+				break;
 			
 			}
 			
 			
 			
 			HttpSession session = request.getSession();
-			session.setAttribute("username", username);			
+			session.setAttribute("username", username);	
+			session.setAttribute("role", role);	
 			session.setMaxInactiveInterval(5 * 60);
 			
 			
-			RequestDispatcher rd = request.getRequestDispatcher("StudentsMenu.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher(page);
 			rd.forward(request, response);
 		} else {
 			out.print("Sorry username or password error");
+			HttpSession session = request.getSession(false);
+			System.out.println("User=" + session.getAttribute("user"));
+			System.out.println("Role=" + session.getAttribute("role"));
+			if (session != null) {
+				session.invalidate();
+			}
 			RequestDispatcher rd = request.getRequestDispatcher("failed.html");
 			rd.include(request, response);
 		}

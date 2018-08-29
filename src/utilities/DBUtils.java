@@ -214,10 +214,11 @@ public class DBUtils {
 			ps.setString(1, username);
 		
 			ResultSet rs = ps.executeQuery();
-			System.out.println("# - Query executed");
+			System.out.println("# - Query role executed");
 			while (rs.next()) {
 				
 				role = rs.getString("GUser_role");
+				System.out.println("Role:" + role);
 			}
 		
 		} catch (Exception ex) {
