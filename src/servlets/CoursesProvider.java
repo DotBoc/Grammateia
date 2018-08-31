@@ -17,7 +17,7 @@ import utilities.SQLConnUtils;
 /**
  * Servlet implementation class CoursesProvider
  */
-@WebServlet("/CoursesProvider")
+@WebServlet("/StudentCourses")
 public class CoursesProvider extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

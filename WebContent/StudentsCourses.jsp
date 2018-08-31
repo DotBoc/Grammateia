@@ -30,7 +30,7 @@ th, td {
 	<li><a>Help</a></li>
 	<li><a>Log Out</a></li>
 </ul>
-<form method="post" action="CoursesProvider">		
+<form method="post" action="StudentCourses">		
 	<input type="submit" value="test"> 
 	</form>
 </body>
