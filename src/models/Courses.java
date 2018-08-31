@@ -2,24 +2,42 @@ package models;
 
 public class Courses {
 	
-	private String CourseName;
-	private int Semester;
+	private String name;
+	private int semester;
+	private int id;
+	private int department;
 	
 	
-	public String getCourseName() {
-		return CourseName;
+	public String getName() {
+		return name;
 	}
 
-	public void setCourseName( String courseName) {
-		CourseName = courseName;
+	public void setName( String courseName) {
+		name = courseName;
 	}
 	
 	public int getSemester() {
-		return Semester;
+		return semester;
 	}
 
-	public void setSemester(int semester) {
-		Semester = semester;
+	public void setSemester(int semester_) {
+		semester = semester_;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id_) {
+		id = id_;
+	}
+	
+	public int getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(int department_) {
+		department = department_;
 	}
 
 }

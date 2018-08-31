@@ -1,7 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<html>
-<link href='style.css' rel='stylesheet'>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <ul>
 	<li><a>Home</a></li>
 	<li><a>Courses</a>
@@ -14,4 +12,3 @@
 	<li><a>Help</a></li>
 	<li><a>Log Out</a></li>
 </ul>
-</html>

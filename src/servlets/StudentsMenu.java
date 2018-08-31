@@ -10,26 +10,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import models.Users;
+import models.*;
 import utilities.AuthUtils;
-import utilities.DBUtils;
 
 /**
- * Servlet implementation class StudentsCourses
+ * Servlet implementation class StudentsMenu
  */
-@WebServlet("/StudentsCourses")
-public class StudentsCourses extends HttpServlet {
+@WebServlet("/StudentsMenu")
+public class StudentsMenu extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+
+	public StudentsMenu() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		System.out.println("# - Starting StudentsCourses");
+		
+		System.out.println("# - Starting StudentsMenu");
 		HttpSession session = request.getSession();
-		System.out.println("# - StudentsCourses got Session");
+		System.out.println("# - StudentsMenu got Session");
+		
 
 		Users loginedUser = AuthUtils.getLoginedUser(session);
-		System.out.println("# - StudentsCourses got User");
+		System.out.println("# - StudentsMenu got User");
 
 		if (loginedUser == null) {
 			response.sendRedirect(request.getContextPath() + "/login");
@@ -37,20 +42,12 @@ public class StudentsCourses extends HttpServlet {
 		}
 
 		request.setAttribute("user", loginedUser);
-		request.setAttribute("AllCourses", DBUtils.getAllCourses(loginedUser));
-		
-		
-		
-		System.out.println("# - StudentsCourses setted user");
-	
-		RequestDispatcher dispatcher = request.getRequestDispatcher("SCourses.jsp");
-		dispatcher.forward(request, response);
+		System.out.println("# - StudentsMenu setted user");
+
+		RequestDispatcher dispatcher = request.getRequestDispatcher("Students.jsp");
+        dispatcher.forward(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub

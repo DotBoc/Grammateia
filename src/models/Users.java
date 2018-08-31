@@ -2,59 +2,69 @@ package models;
 
 public class Users {
 
-	private String Username;
-	private String PasswordHash;
-	private String Name;
-	private String Surname;
-	private int Department;
-	private static int UsersID = 0;
+	private String username;
+	private String passwordHash;
+	private String name;
+	private String surname;
+	private int department;
+	private String role;
+	private int usersID = 0;
 
 	public String getUsername() {
-		return Username;
+		return username;
 	}
 
-	public void setUsername(String username) {
-		Username = username;
+	public void setUsername(String username_) {
+		username = username_;
 	}
 
 	public String getPasswordHash() {
-		return PasswordHash;
+		return passwordHash;
 	}
 
-	public void setPasswordHash(String passwordHash) {
-		PasswordHash = passwordHash;
+	public void setPasswordHash(String passwordHash_) {
+		passwordHash = passwordHash_;
 	}
 
 	public String getName() {
-		return Name;
+		return name;
 	}
 
-	public void setName(String name) {
-		Name = name;
+	public void setName(String name_) {
+		name = name_;
 	}
 
 	public String getSurname() {
-		return Surname;
+		return surname;
 	}
 
-	public void setSurname(String surname) {
-		Surname = surname;
+	public void setSurname(String surname_) {
+		surname = surname_;
 	}
 
 	public int getDepartment() {
-		return Department;
+		return department;
 	}
 
-	public void setDepartment(int department) {
-		Department = department;
+	public void setDepartment(int department_) {
+		department = department_;
+	}
+	
+	public String getRole() {
+		return role;
 	}
 
-	public void setUsersID(int usersID) {
-		UsersID = usersID;
+	public void setRole(String role_) {
+		role = role_;
+	}
+
+
+	public void setUsersID(int usersID_) {
+		usersID = usersID_;
 	}
 
 	public int getUsersID() {
-		return UsersID;
+		return usersID;
 	}
 
 	public Users() {
@@ -69,12 +79,13 @@ public class Users {
 		this.setDepartment(department);
 	}
 
-	public Users(int usersID ,String username, String name,String surname, int department){
+	public Users(int usersID ,String username, String name,String surname, int department ,String role){
 		this.setUsersID(usersID);
 		this.setUsername(username);		
 		this.setName(name);
 		this.setSurname(surname);
 		this.setDepartment(department);		
+		this.setRole(role);
 	}
 
 }

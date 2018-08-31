@@ -4,12 +4,47 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.mindrot.BCrypt;
 
+import models.Courses;
 import models.Users;
 
 public class DBUtils {
+
+	public static Users getUser(String username) throws SQLException {
+
+		try {
+			Connection con = SQLConnUtils.getSQLConnection();
+			System.out.println("# - Starting getUser");
+
+			PreparedStatement ps = con.prepareStatement("Select GUser_ID,GUser_username,GUser_name,GUser_surname,GUser_department,GUser_role from GUser where GUser_username=?");
+			ps.setString(1, username);
+
+			ResultSet rs = ps.executeQuery();
+			System.out.println("# - Query executed");
+			while (rs.next()) {
+
+				Users user = new Users();
+				user.setUsersID(rs.getInt("GUser_ID"));
+				user.setUsername(rs.getString("GUser_username"));
+				user.setName(rs.getString("GUser_name"));
+				user.setSurname(rs.getString("GUser_surname"));
+				user.setDepartment(rs.getInt("GUser_department"));
+				user.setRole(rs.getString("GUser_role"));		
+				System.out.println(user);
+				return user;
+
+			}
+
+		} catch (Exception ex) {
+			System.out.println("Error : " + ex);
+		}
+
+		return null;
+	}
 
 	public static boolean checkUsername(String username) {
 		boolean availiable = true;
@@ -40,7 +75,8 @@ public class DBUtils {
 		return availiable;
 	}
 
-	public static boolean register(String username, String password, String name, String surname, String department,String role) {
+	public static boolean register(String username, String password, String name, String surname, String department,
+			String role) {
 		boolean registered = false;
 		try {
 
@@ -70,8 +106,8 @@ public class DBUtils {
 		return registered;
 	}
 
-	public static boolean register(String username, String password, String name, String surname, String department,String role,
-			String registration_number, String gender, String semester) {
+	public static boolean register(String username, String password, String name, String surname, String department,
+			String role, String registration_number, String gender, String semester) {
 		boolean registered = false;
 		int gUser_ID = 0;
 
@@ -79,7 +115,7 @@ public class DBUtils {
 
 			int semester_numerical = Integer.parseInt(semester);
 
-			if (register(username, password, name, surname, department,role)) {
+			if (register(username, password, name, surname, department, role)) {
 
 				Connection con = SQLConnUtils.getSQLConnection();
 				PreparedStatement ps = con.prepareStatement("Select GUser_ID from GUser where GUser_username=?");
@@ -118,14 +154,14 @@ public class DBUtils {
 		return registered;
 	}
 
-	public static boolean registerP(String username, String password, String name, String surname, String department,String role,
-			String email) {
+	public static boolean registerP(String username, String password, String name, String surname, String department,
+			String role, String email) {
 		boolean registered = false;
 		int gUser_ID = 0;
 
 		try {
 
-			if (register(username, password, name, surname, department,role)) {
+			if (register(username, password, name, surname, department, role)) {
 
 				Connection con = SQLConnUtils.getSQLConnection();
 				PreparedStatement ps = con.prepareStatement("Select GUser_ID from GUser where GUser_username=?");
@@ -175,36 +211,35 @@ public class DBUtils {
 			ResultSet rs = ps.executeQuery();
 			System.out.println("# - Query executed");
 			while (rs.next()) {
-					
-				
+
 				int gUser_ID = rs.getInt("GUser_ID");
 				String gUser_username = rs.getString("GUser_username");
 				String gUser_password_hashed = rs.getString("GUser_password");
 				String gUser_name = rs.getString("GUser_name");
 				String gUser_surname = rs.getString("GUser_surname");
 				int gUser_department = rs.getInt("GUser_department");
-				
-				//Users user = new Users(gUser_ID ,gUser_username, gUser_name,gUser_surname, gUser_department);
+
+				// Users user = new Users(gUser_ID ,gUser_username, gUser_name,gUser_surname,
+				// gUser_department);
 
 				System.out.println(gUser_password_hashed);
 
 				if (BCrypt.checkpw(password, gUser_password_hashed)) {
 					status = true;
 				}
-				
-				
+
 			}
 
 		} catch (Exception ex) {
 			System.out.println("Error : " + ex);
 		}
+		System.out.println("# - Ending Validate");
 		return status;
-	}	
-
+	}
 
 	public static String getrole(String username) {
 		String role = "error";
-		
+
 		try {
 
 			Connection con = SQLConnUtils.getSQLConnection();
@@ -212,19 +247,78 @@ public class DBUtils {
 
 			PreparedStatement ps = con.prepareStatement("Select GUser_role from GUser where GUser_username=?");
 			ps.setString(1, username);
-		
+
 			ResultSet rs = ps.executeQuery();
 			System.out.println("# - Query role executed");
 			while (rs.next()) {
-				
+
 				role = rs.getString("GUser_role");
 				System.out.println("Role:" + role);
 			}
-		
+
 		} catch (Exception ex) {
 			System.out.println("Error : " + ex);
 		}
 		return role;
 	}
 
+	public static List<Courses> getAllCourses(Users user){
+
+        List<Courses> list = new LinkedList<>();
+
+        try {
+        	Connection con = SQLConnUtils.getSQLConnection();
+			System.out.println("# - Creating List");
+			
+        	PreparedStatement ps = con.prepareStatement("Select * from Courses where FK_Courses_Department_ID = ?");
+			ps.setInt(1, user.getDepartment());
+			
+			ResultSet rs = ps.executeQuery();
+			System.out.println("# - Query executed");
+			
+            while (rs.next()){
+                Courses course = new Courses();
+                course.setId(rs.getInt("Courses_ID"));
+                course.setName(rs.getString("Courses_Name"));
+                course.setSemester(rs.getInt("Course_Semester"));
+                course.setDepartment(rs.getInt("FK_Courses_Department_ID"));
+
+                list.add(course);
+            }
+
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+	
+	public static boolean enrolltocourse(int uid, int course_id) {
+		boolean success = false;
+		try {
+		
+			Connection con = SQLConnUtils.getSQLConnection();
+			PreparedStatement ps = con.prepareStatement("insert into Students_has_Courses values(?,?)");
+			ps.setInt(1, uid);
+			ps.setInt(2, course_id);		
+
+			int i = ps.executeUpdate();
+
+			if (i > 0) {
+				success = true;
+				System.out.println("You are sucessfully enrolled to a course");
+			}
+
+		} catch (Exception se) {
+			se.printStackTrace();
+		}
+		
+		
+		return success;	
+		
+	}
 }

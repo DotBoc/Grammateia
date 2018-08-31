@@ -2,6 +2,7 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import models.*;
 import utilities.*;
 
 /**
@@ -18,65 +20,68 @@ import utilities.*;
  */
 @WebServlet("/LoginChecker")
 public class LoginChecker extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;	
+	
+
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
+			
 
-		String page;
-		String role = "error";
+		Users user = null;
+		String page;		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
+		HttpSession session = request.getSession();
 
 		if (DBUtils.validate(username, password)) {
 			
-			switch(DBUtils.getrole(username)) {
+			
+			try {
+				user = DBUtils.getUser(username);
+				System.out.println("# - Created user");
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			switch(user.getRole()) {
 				
 			case "Gram" :
-				page = "GramMenu.jsp";
-				role = "Gram";
+				page = "/GramMenu.jsp";
+				System.out.println(user.getRole());
 				break;
-							
-			
+										
 			case "Student" :
-				page = "StudentsMenu.jsp";
-				role = "Student";
+				page = "/StudentsMenu";
+				System.out.println(user.getRole());
 				break;
 			
 			case "Professor" : 
-				page = "ProfessorMenu.jsp";
-				role = "Professor";
-				break;
-			
-			case "error" : 
-				page = "failed.html";
-				role = "error";
-				break;
+				page = "/ProfessorMenu.jsp";
+				System.out.println(user.getRole());
+				break;					
 				
 			default: 
-				page = "failed.html";
+				page = "/failed.html";
+				System.out.println(user.getRole());
 				break;
 			
-			}
+			}	
+		
 			
 			
-			
-			HttpSession session = request.getSession();
-			session.setAttribute("username", username);	
-			session.setAttribute("role", role);	
-			session.setMaxInactiveInterval(5 * 60);
+	        AuthUtils.storeLoginedUser(session, user);
+	        System.out.println("# - Stored user");
+	        response.sendRedirect(request.getContextPath() + page);
 			
 			
-			RequestDispatcher rd = request.getRequestDispatcher(page);
-			rd.forward(request, response);
 		} else {
 			out.print("Sorry username or password error");
-			HttpSession session = request.getSession(false);
-			System.out.println("User=" + session.getAttribute("user"));
-			System.out.println("Role=" + session.getAttribute("role"));
+					
 			if (session != null) {
 				session.invalidate();
 			}
