@@ -5,6 +5,7 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Grammateia</title>
+<script src="res/js/loginrules"></script>
 </head>
 <body>
 	<form method="post" action="LoginChecker">
