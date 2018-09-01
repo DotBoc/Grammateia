@@ -1,16 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-	<link href='style.css' rel='stylesheet' >
-    <ul>
-    	<li><a>Home</a></li>
-        <li><a>Subjects</a>
-        	<ul>
-            	<li><a>Evaluated</a></li>
-                <li><a>Due to Evaluation</a></li>
-            </ul>
-        </li>      
-        <li><a>Help</a></li>
-        <li><a>Log Out</a></li>
-    </ul>
+<head>
+<jsp:include page="/WEB-INF/elements/head.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/elements/ProfessorTopMenu.jsp"></jsp:include>
+</head>
+<body>
+
+</body>
 </html>

@@ -1,16 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<link href='style.css' rel='stylesheet' >
-    <ul>
-    	<li><a>Home</a></li>
-        <li><a>Sign Up</a>
-        	<ul>
-            	<li><a>Professor</a></li>
-                <li><a>Student</a></li>
-            </ul>
-        </li>      
-        <li><a>Help</a></li>
-        <li><a>Log Out</a></li>
-    </ul>
+<head>
+<jsp:include page="/WEB-INF/elements/head.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/elements/GramTopMenu.jsp"></jsp:include>
+</head>
+<body>
+
+</body>
 </html>
