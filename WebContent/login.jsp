@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<jsp:include page="/WEB-INF/elements/head.jsp"></jsp:include>
 <meta charset="ISO-8859-1">
 <title>Grammateia</title>
 <script src="res/js/loginrules"></script>
