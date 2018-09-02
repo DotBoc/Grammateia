@@ -5,7 +5,7 @@
 	<li><a>Subjects</a>
         <ul>
             <li><a>Evaluated</a></li>
-            <li><a>Due to Evaluation</a></li>
+            <li><a href="PDTEvaluations">Due to Evaluation</a></li>
         </ul>
    </li>      
    <li><a>Help</a></li>

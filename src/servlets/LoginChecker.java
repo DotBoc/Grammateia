@@ -61,7 +61,7 @@ public class LoginChecker extends HttpServlet {
 				break;
 			
 			case "Professor" : 
-				page = "/ProfessorMenu.jsp";
+				page = "/ProfMenu";
 				System.out.println(user.getRole());
 				break;					
 				

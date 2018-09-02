@@ -306,15 +306,15 @@ public class DBUtils {
 			Connection con = SQLConnUtils.getSQLConnection();
 			System.out.println("# - Creating List");
 
-			PreparedStatement ps = con
-					.prepareStatement("Select Courses.Courses_Name , Courses.Course_Semester, GUser.GUser_surname From GUser,Professors,Professors_has_Courses,Courses where GUser.GUser_ID = Professors.FK_Professors_GUser_ID and Professors.FK_Professors_GUser_ID = Professors_has_Courses.FK_Professors_has_Courses_Professors_ID and Professors_has_Courses.FK_Professors_has_Courses_Courses_ID = Courses.Courses_ID and GUser.GUser_department = ?");
+			PreparedStatement ps = con.prepareStatement(
+					"Select Courses.Courses_Name , Courses.Course_Semester, GUser.GUser_surname From GUser,Professors,Professors_has_Courses,Courses where GUser.GUser_ID = Professors.FK_Professors_GUser_ID and Professors.FK_Professors_GUser_ID = Professors_has_Courses.FK_Professors_has_Courses_Professors_ID and Professors_has_Courses.FK_Professors_has_Courses_Courses_ID = Courses.Courses_ID and GUser.GUser_department = ?");
 			ps.setInt(1, user.getDepartment());
 
 			ResultSet rs = ps.executeQuery();
 			System.out.println("# - Query executed");
 
 			while (rs.next()) {
-				AssignedCourse course = new AssignedCourse();				
+				AssignedCourse course = new AssignedCourse();
 				course.setName(rs.getString("Courses_Name"));
 				course.setSemester(rs.getInt("Course_Semester"));
 				course.setSurname(rs.getString("GUser_surname"));
@@ -373,8 +373,10 @@ public class DBUtils {
 			System.out.println("# - Query executed");
 
 			while (rs.next()) {
-				
-				Professors professor = new Professors(rs.getInt("GUser_ID"), rs.getString("GUser_username"), rs.getString("GUser_name"), rs.getString("GUser_surname"),rs.getInt("GUser_department"), rs.getString("GUser_role"), rs.getString("Professors_email"));
+
+				Professors professor = new Professors(rs.getInt("GUser_ID"), rs.getString("GUser_username"),
+						rs.getString("GUser_name"), rs.getString("GUser_surname"), rs.getInt("GUser_department"),
+						rs.getString("GUser_role"), rs.getString("Professors_email"));
 				System.out.println("# - Added Professors to list");
 
 				list.add(professor);
@@ -391,17 +393,15 @@ public class DBUtils {
 		return list;
 	}
 
-	public static boolean assignCourse (int gUser_ID , int course_ID ) {
+	public static boolean assignCourse(int gUser_ID, int course_ID) {
 		boolean assigned = false;
-		
+
 		try {
 
-			
 			Connection con = SQLConnUtils.getSQLConnection();
 			PreparedStatement ps = con.prepareStatement("insert into Professors_has_Courses values (?,?)");
 			ps.setInt(1, gUser_ID);
 			ps.setInt(2, course_ID);
-			
 
 			int i = ps.executeUpdate();
 
@@ -413,7 +413,146 @@ public class DBUtils {
 		} catch (Exception se) {
 			se.printStackTrace();
 		}
+
+		return assigned;
+	}
+
+	public static List<Courses> getProfCourses(Users loginedUser) {
+
+		List<Courses> list = new LinkedList<>();
+
+		try {
+			Connection con = SQLConnUtils.getSQLConnection();
+			System.out.println("# - Creating List");
+
+			PreparedStatement ps = con.prepareStatement(
+					"Select *  from Professors_has_Courses,Courses where Professors_has_Courses.FK_Professors_has_Courses_Courses_ID = Courses.Courses_ID and Professors_has_Courses.FK_Professors_has_Courses_Professors_ID =?");
+			ps.setInt(1, loginedUser.getUsersID());
+
+			ResultSet rs = ps.executeQuery();
+			System.out.println("# - Query executed");
+
+			while (rs.next()) {
+				Courses course = new Courses();
+				course.setId(rs.getInt("Courses_ID"));
+				course.setName(rs.getString("Courses_Name"));
+				course.setSemester(rs.getInt("Course_Semester"));
+				course.setDepartment(rs.getInt("FK_Courses_Department_ID"));
+				System.out.println("# - Added Course to list");
+
+				list.add(course);
+			}
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	public static boolean gradeStudent(int course_ID, String rnumber, float grade) {
 		
-		return assigned ;
+		boolean graded = false;
+		int user_ID;		
+		
+		try {
+			
+			System.out.println("# - Started gradeStudent ");
+			
+			user_ID = getStudentRN(rnumber);
+			System.out.println("# - Got User ID it is : " + user_ID);
+			
+			if(insertGrade(course_ID,grade,user_ID)) {
+				graded = true;
+			}
+			
+		}catch (Exception se) {
+			se.printStackTrace();
+		}
+
+		return graded;
+	}
+
+	private static boolean insertGrade(int course_ID, float grade, int user_ID) {
+		boolean assigned = false;
+		int Grades_ID;
+
+		try {
+			
+			System.out.println("# -insertGrade started");
+			Connection con = SQLConnUtils.getSQLConnection();
+			PreparedStatement ps = con.prepareStatement("insert into  Grades values (GETDATE(),?,? );");
+			ps.setFloat(1, grade);
+			ps.setInt(2, course_ID);
+
+			int i = ps.executeUpdate();
+
+			if (i > 0) {
+				System.out.println("# -insert into grades successful");
+				PreparedStatement ps1 = con.prepareStatement("Select Max(Grades_ID) From Grades");
+				ResultSet rs = ps1.executeQuery();
+				
+				while (rs.next()) {
+					System.out.println("# -Got max id for grades");
+					Grades_ID = rs.getInt(1);
+					System.out.println("# -Grade_Id : "+ Grades_ID );
+
+
+					PreparedStatement ps2 = con
+							.prepareStatement("insert into Students_has_Grades values(?,?);");
+					ps2.setInt(1, user_ID);
+					ps2.setInt(2, Grades_ID);
+					
+					
+					int o = ps2.executeUpdate();
+					System.out.println("# - Executed query for insert into Student_has_Grades");
+					if (o > 0) {
+						assigned = true;
+						System.out.println("You have succesfully assigned a course");
+					}
+
+				}
+			}
+
+		} catch (Exception se) {
+			se.printStackTrace();
+		}
+
+		return assigned;
+
+	}
+
+	private static int getStudentRN(String rnumber) {
+
+		int gUser_ID = 0;
+
+		try {
+			Connection con = SQLConnUtils.getSQLConnection();
+
+			PreparedStatement ps = con.prepareStatement(
+					"Select GUser.GUser_ID from GUser, Students Where GUser.GUser_ID = Students.FK_Students_GUser_ID and Students.Students_Registration_Number = ? ");
+			ps.setString(1, rnumber);
+
+			ResultSet rs = ps.executeQuery();
+			System.out.println("# - Query executed");
+
+			while (rs.next()) {
+				gUser_ID = rs.getInt("GUser_ID");
+
+			}
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return gUser_ID;
 	}
 }

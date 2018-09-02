@@ -36,6 +36,10 @@ public class Students extends Users {
 		}
 	}
 		//Constructor for the Students objects.
+
+	public Students() {
+		// TODO Auto-generated constructor stub
+	}
 }
 	
 	

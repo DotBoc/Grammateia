@@ -7,5 +7,13 @@
 </head>
 <body>
 
+<div>
+<h3>Hello: ${user.username}</h3>
+</div>
+
+<div>
+<% String status = request.getParameter("status");  %> ${status}
+</div>
+
 </body>
 </html>
