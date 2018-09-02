@@ -298,32 +298,26 @@ public class DBUtils {
 		return list;
 	}
 
-	public static List<Courses> getDepartmentCoursesWithProf(Users user) {
+	public static List<AssignedCourse> getDepartmentCoursesWithProf(Users user) {
 
-		List<Courses> list = new LinkedList<>();
+		List<AssignedCourse> list = new LinkedList<>();
 
 		try {
 			Connection con = SQLConnUtils.getSQLConnection();
 			System.out.println("# - Creating List");
 
 			PreparedStatement ps = con
-					.prepareStatement("Select Courses.Courses_Name , Courses.Course_Semester, GUser.GUser_surname \r\n"
-							+ "From GUser,Professors,Professors_has_Courses,Courses\r\n"
-							+ "where GUser.GUser_ID = Professors.FK_Professors_GUser_ID \r\n"
-							+ "and Professors.FK_Professors_GUser_ID = Professors_has_Courses.FK_Professors_has_Courses_Professors_ID\r\n"
-							+ "and Professors_has_Courses.FK_Professors_has_Courses_Courses_ID = Courses.Courses_ID\r\n"
-							+ "and GUser.GUser_department = ?");
+					.prepareStatement("Select Courses.Courses_Name , Courses.Course_Semester, GUser.GUser_surname From GUser,Professors,Professors_has_Courses,Courses where GUser.GUser_ID = Professors.FK_Professors_GUser_ID and Professors.FK_Professors_GUser_ID = Professors_has_Courses.FK_Professors_has_Courses_Professors_ID and Professors_has_Courses.FK_Professors_has_Courses_Courses_ID = Courses.Courses_ID and GUser.GUser_department = ?");
 			ps.setInt(1, user.getDepartment());
 
 			ResultSet rs = ps.executeQuery();
 			System.out.println("# - Query executed");
 
 			while (rs.next()) {
-				Courses course = new Courses();
-				course.setId(rs.getInt("Courses_ID"));
+				AssignedCourse course = new AssignedCourse();				
 				course.setName(rs.getString("Courses_Name"));
 				course.setSemester(rs.getInt("Course_Semester"));
-				course.setDepartment(rs.getInt("FK_Courses_Department_ID"));
+				course.setSurname(rs.getString("GUser_surname"));
 
 				list.add(course);
 			}

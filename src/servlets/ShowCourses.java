@@ -47,7 +47,7 @@ public class ShowCourses extends HttpServlet {
 		
 		System.out.println("# - ShowCourses setted user");
 	
-		RequestDispatcher dispatcher = request.getRequestDispatcher("SCourses.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("GCourses.jsp");
 		dispatcher.forward(request, response);
 	}
 
