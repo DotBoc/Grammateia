@@ -455,22 +455,22 @@ public class DBUtils {
 	}
 
 	public static boolean gradeStudent(int course_ID, String rnumber, float grade) {
-		
+
 		boolean graded = false;
-		int user_ID;		
-		
+		int user_ID;
+
 		try {
-			
+
 			System.out.println("# - Started gradeStudent ");
-			
+
 			user_ID = getStudentRN(rnumber);
 			System.out.println("# - Got User ID it is : " + user_ID);
-			
-			if(insertGrade(course_ID,grade,user_ID)) {
+
+			if (insertGrade(course_ID, grade, user_ID)) {
 				graded = true;
 			}
-			
-		}catch (Exception se) {
+
+		} catch (Exception se) {
 			se.printStackTrace();
 		}
 
@@ -482,7 +482,7 @@ public class DBUtils {
 		int Grades_ID;
 
 		try {
-			
+
 			System.out.println("# -insertGrade started");
 			Connection con = SQLConnUtils.getSQLConnection();
 			PreparedStatement ps = con.prepareStatement("insert into  Grades values (GETDATE(),?,? );");
@@ -495,19 +495,16 @@ public class DBUtils {
 				System.out.println("# -insert into grades successful");
 				PreparedStatement ps1 = con.prepareStatement("Select Max(Grades_ID) From Grades");
 				ResultSet rs = ps1.executeQuery();
-				
+
 				while (rs.next()) {
 					System.out.println("# -Got max id for grades");
 					Grades_ID = rs.getInt(1);
-					System.out.println("# -Grade_Id : "+ Grades_ID );
+					System.out.println("# -Grade_Id : " + Grades_ID);
 
-
-					PreparedStatement ps2 = con
-							.prepareStatement("insert into Students_has_Grades values(?,?);");
+					PreparedStatement ps2 = con.prepareStatement("insert into Students_has_Grades values(?,?);");
 					ps2.setInt(1, user_ID);
 					ps2.setInt(2, Grades_ID);
-					
-					
+
 					int o = ps2.executeUpdate();
 					System.out.println("# - Executed query for insert into Student_has_Grades");
 					if (o > 0) {
@@ -554,5 +551,38 @@ public class DBUtils {
 		}
 
 		return gUser_ID;
+	}
+
+	public static List<Evaluated> getEvaluated(int course_id) {
+		List<Evaluated> list = new LinkedList<>();
+
+		try {
+			Connection con = SQLConnUtils.getSQLConnection();
+			System.out.println("# - Creating List");
+
+			PreparedStatement ps = con.prepareStatement(
+					"select Students.Students_Registration_Number,Grades.Grades_Grade from Students,Students_has_Grades,Grades,Courses where Students_has_Grades.FK_Students_has_Grades_GUser_ID = Students.FK_Students_GUser_ID and FK_Students_has_Grades_Grades_ID=Grades.Grades_ID and Grades.FK_Grades_Courses_ID = Courses.Courses_ID and Courses_ID = ?");
+			ps.setInt(1, course_id);
+			ResultSet rs = ps.executeQuery();
+			System.out.println("# - Query executed");
+
+			while (rs.next()) {
+				Evaluated evaluated = new Evaluated();
+				evaluated.setRegistration_number(rs.getString("Students_Registration_Number"));
+				evaluated.setGrade(rs.getFloat("Grades_Grade"));
+				System.out.println("# - Added Evaluated to list");
+
+				list.add(evaluated);
+			}
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
 	}
 }

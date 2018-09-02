@@ -8,34 +8,22 @@
 <jsp:include page="/WEB-INF/elements/ProfessorTopMenu.jsp"></jsp:include>
 </head>
 <body>
+
+<h3>Select a Course to see its grades</h3>
 	<div style="margin-left: auto; margin-right: auto;">
 
-		<form action="CourseRegister" method="post">
+		<form action="GetEvaluated" method="post">
 
-			<table>
-				<thead>
-					<tr>
-
-						<th width="40%">Course Name</th>
-						<th width="40%">Student Registration Number</th>
-						<th width="20%">Grade</th>
-
-					</tr>
-				</thead>
+			Course : <select name="CourseName">
 
 				<c:forEach items="${AllCourses}" var="p">
 
-					<tr>
-						<td>${p.id}</td>
-						<td>${p.name}</td>
-						<td>${p.semester}</td>
-					</tr>
-
+					<option value="${p.id}">${p.name}</option>
 
 				</c:forEach>
-
-			</table>
-
+				
+			</select><br />	<br /> 
+					
 			<input type="submit" value="Submit">
 		</form>
 

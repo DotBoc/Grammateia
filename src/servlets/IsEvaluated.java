@@ -50,7 +50,7 @@ public class IsEvaluated extends HttpServlet {
 					
 		System.out.println("# - IsEvaluated setted user");
 	
-		RequestDispatcher dispatcher = request.getRequestDispatcher("Evaluated.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("SelectCouseforEvaluated.jsp");
 		dispatcher.forward(request, response);	
 	}
 
