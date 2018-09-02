@@ -5,10 +5,9 @@
 <html>
 <head>
 <jsp:include page="/WEB-INF/elements/head.jsp"></jsp:include>
-<jsp:include page="/WEB-INF/elements/StudentsTopMenu.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/elements/ProfessorTopMenu.jsp"></jsp:include>
 </head>
 <body>
-
 	<div style="margin-left: auto; margin-right: auto;">
 
 		<form action="CourseRegister" method="post">
@@ -20,6 +19,7 @@
 						<th width="40%">Course Name</th>
 						<th width="40%">Student Registration Number</th>
 						<th width="20%">Grade</th>
+
 					</tr>
 				</thead>
 

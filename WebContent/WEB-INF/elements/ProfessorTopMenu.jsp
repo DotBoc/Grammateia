@@ -4,7 +4,7 @@
     <li><a>Home</a></li>
 	<li><a>Subjects</a>
         <ul>
-            <li><a>Evaluated</a></li>
+            <li><a href="IsEvaluated">Evaluated</a></li>
             <li><a href="PDTEvaluations">Due to Evaluation</a></li>
         </ul>
    </li>      
