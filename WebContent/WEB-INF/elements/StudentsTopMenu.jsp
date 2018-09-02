@@ -10,5 +10,5 @@
 		</ul></li>
 
 	<li><a>Help</a></li>
-	<li><a>Log Out</a></li>
+	<li><a href="Logout">Log Out</a></li>
 </ul>

@@ -15,15 +15,17 @@ import javax.servlet.http.HttpSession;
 public class Logout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType("text/html");		
+		response.setContentType("text/html");			
+	
 		
 		HttpSession session = request.getSession(false);
 		System.out.println("User=" + session.getAttribute("user"));
 		if (session != null) {
 			session.invalidate();
-		}
+		}			
+		
 		
 		response.sendRedirect("index.html");
 	}

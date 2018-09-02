@@ -4,6 +4,8 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
+<jsp:include page="/WEB-INF/elements/head.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/elements/GramTopMenu.jsp"></jsp:include>
 <title>Insert title here</title>
 </head>
 <body>

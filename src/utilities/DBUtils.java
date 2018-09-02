@@ -9,8 +9,7 @@ import java.util.List;
 
 import org.mindrot.BCrypt;
 
-import models.Courses;
-import models.Users;
+import models.*;
 
 public class DBUtils {
 
@@ -20,7 +19,8 @@ public class DBUtils {
 			Connection con = SQLConnUtils.getSQLConnection();
 			System.out.println("# - Starting getUser");
 
-			PreparedStatement ps = con.prepareStatement("Select GUser_ID,GUser_username,GUser_name,GUser_surname,GUser_department,GUser_role from GUser where GUser_username=?");
+			PreparedStatement ps = con.prepareStatement(
+					"Select GUser_ID,GUser_username,GUser_name,GUser_surname,GUser_department,GUser_role from GUser where GUser_username=?");
 			ps.setString(1, username);
 
 			ResultSet rs = ps.executeQuery();
@@ -33,7 +33,7 @@ public class DBUtils {
 				user.setName(rs.getString("GUser_name"));
 				user.setSurname(rs.getString("GUser_surname"));
 				user.setDepartment(rs.getInt("GUser_department"));
-				user.setRole(rs.getString("GUser_role"));		
+				user.setRole(rs.getString("GUser_role"));
 				System.out.println(user);
 				return user;
 
@@ -262,49 +262,91 @@ public class DBUtils {
 		return role;
 	}
 
-	public static List<Courses> getAllCourses(Users user){
+	public static List<Courses> getAllCourses(Users user) {
 
-        List<Courses> list = new LinkedList<>();
+		List<Courses> list = new LinkedList<>();
 
-        try {
-        	Connection con = SQLConnUtils.getSQLConnection();
+		try {
+			Connection con = SQLConnUtils.getSQLConnection();
 			System.out.println("# - Creating List");
-			
-        	PreparedStatement ps = con.prepareStatement("Select * from Courses where FK_Courses_Department_ID = ?");
+
+			PreparedStatement ps = con.prepareStatement("Select * from Courses where FK_Courses_Department_ID = ?");
 			ps.setInt(1, user.getDepartment());
-			
+
 			ResultSet rs = ps.executeQuery();
 			System.out.println("# - Query executed");
-			
-            while (rs.next()){
-                Courses course = new Courses();
-                course.setId(rs.getInt("Courses_ID"));
-                course.setName(rs.getString("Courses_Name"));
-                course.setSemester(rs.getInt("Course_Semester"));
-                course.setDepartment(rs.getInt("FK_Courses_Department_ID"));
 
-                list.add(course);
-            }
+			while (rs.next()) {
+				Courses course = new Courses();
+				course.setId(rs.getInt("Courses_ID"));
+				course.setName(rs.getString("Courses_Name"));
+				course.setSemester(rs.getInt("Course_Semester"));
+				course.setDepartment(rs.getInt("FK_Courses_Department_ID"));
+				System.out.println("# - Added Course to list");
 
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+				list.add(course);
+			}
 
-        return list;
-    }
-	
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	public static List<Courses> getDepartmentCoursesWithProf(Users user) {
+
+		List<Courses> list = new LinkedList<>();
+
+		try {
+			Connection con = SQLConnUtils.getSQLConnection();
+			System.out.println("# - Creating List");
+
+			PreparedStatement ps = con
+					.prepareStatement("Select Courses.Courses_Name , Courses.Course_Semester, GUser.GUser_surname \r\n"
+							+ "From GUser,Professors,Professors_has_Courses,Courses\r\n"
+							+ "where GUser.GUser_ID = Professors.FK_Professors_GUser_ID \r\n"
+							+ "and Professors.FK_Professors_GUser_ID = Professors_has_Courses.FK_Professors_has_Courses_Professors_ID\r\n"
+							+ "and Professors_has_Courses.FK_Professors_has_Courses_Courses_ID = Courses.Courses_ID\r\n"
+							+ "and GUser.GUser_department = ?");
+			ps.setInt(1, user.getDepartment());
+
+			ResultSet rs = ps.executeQuery();
+			System.out.println("# - Query executed");
+
+			while (rs.next()) {
+				Courses course = new Courses();
+				course.setId(rs.getInt("Courses_ID"));
+				course.setName(rs.getString("Courses_Name"));
+				course.setSemester(rs.getInt("Course_Semester"));
+				course.setDepartment(rs.getInt("FK_Courses_Department_ID"));
+
+				list.add(course);
+			}
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
 	public static boolean enrolltocourse(int uid, int course_id) {
 		boolean success = false;
 		try {
-		
+
 			Connection con = SQLConnUtils.getSQLConnection();
 			PreparedStatement ps = con.prepareStatement("insert into Students_has_Courses values(?,?)");
 			ps.setInt(1, uid);
-			ps.setInt(2, course_id);		
+			ps.setInt(2, course_id);
 
 			int i = ps.executeUpdate();
 
@@ -316,9 +358,68 @@ public class DBUtils {
 		} catch (Exception se) {
 			se.printStackTrace();
 		}
+
+		return success;
+
+	}
+
+	public static List<Professors> getAllProfessors(Users user) {
+
+		List<Professors> list = new LinkedList<>();
+
+		try {
+			Connection con = SQLConnUtils.getSQLConnection();
+			System.out.println("# - Creating List");
+
+			PreparedStatement ps = con.prepareStatement(
+					"Select GUser.GUser_ID , GUser.GUser_username , GUser.GUser_name ,GUser.GUser_surname , GUser.GUser_department , GUser.GUser_role , Professors.Professors_email From GUser,Professors where GUser.GUser_department = ? and GUser.GUser_ID = Professors.FK_Professors_GUser_ID ");
+			ps.setInt(1, user.getDepartment());
+
+			ResultSet rs = ps.executeQuery();
+			System.out.println("# - Query executed");
+
+			while (rs.next()) {
+				
+				Professors professor = new Professors(rs.getInt("GUser_ID"), rs.getString("GUser_username"), rs.getString("GUser_name"), rs.getString("GUser_surname"),rs.getInt("GUser_department"), rs.getString("GUser_role"), rs.getString("Professors_email"));
+				System.out.println("# - Added Professors to list");
+
+				list.add(professor);
+			}
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	public static boolean assignCourse (int gUser_ID , int course_ID ) {
+		boolean assigned = false;
 		
+		try {
+
+			
+			Connection con = SQLConnUtils.getSQLConnection();
+			PreparedStatement ps = con.prepareStatement("insert into Professors_has_Courses values (?,?)");
+			ps.setInt(1, gUser_ID);
+			ps.setInt(2, course_ID);
+			
+
+			int i = ps.executeUpdate();
+
+			if (i > 0) {
+				assigned = true;
+				System.out.println("You have succesfully assigned a course");
+			}
+
+		} catch (Exception se) {
+			se.printStackTrace();
+		}
 		
-		return success;	
-		
+		return assigned ;
 	}
 }

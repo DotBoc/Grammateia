@@ -10,22 +10,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import models.*;
+import models.Users;
 import utilities.AuthUtils;
 
 /**
- * Servlet implementation class StudentsMenu
+ * Servlet implementation class GramMenu
  */
-@WebServlet("/StudentsMenu")
-public class StudentsMenu extends HttpServlet {
+@WebServlet("/GramMenu")
+public class GramMenu extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public GramMenu() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
-	public StudentsMenu() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
@@ -33,13 +36,13 @@ public class StudentsMenu extends HttpServlet {
 		response.setDateHeader("Expires", 0); // Proxies.
 		
 		
-		System.out.println("# - Starting StudentsMenu");
+		System.out.println("# - Starting GramMenu");
 		HttpSession session = request.getSession();
-		System.out.println("# - StudentsMenu got Session");
+		System.out.println("# - GramMenu got Session");
 		
 
 		Users loginedUser = AuthUtils.getLoginedUser(session);
-		System.out.println("# - StudentsMenu got User");
+		System.out.println("# - GramMenu got User");
 
 		if (loginedUser == null) {
 			response.sendRedirect(request.getContextPath() + "/login");
@@ -47,14 +50,13 @@ public class StudentsMenu extends HttpServlet {
 		}
 
 		request.setAttribute("user", loginedUser);
-		System.out.println("# - StudentsMenu setted user");
+		System.out.println("# - GramMenu setted user");
 
-		RequestDispatcher dispatcher = request.getRequestDispatcher("Students.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("Grammateia.jsp");
         dispatcher.forward(request, response);
 	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+    
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

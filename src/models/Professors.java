@@ -2,17 +2,7 @@ package models;
 
 public class Professors extends Users {
 	
-	private String TeachingSubject;
 	private String Email;
-	
-	
-	public String getTeachingSubject() {
-		return TeachingSubject;
-	}
-
-	public void setTeachingSubject( String teachingSubject) {
-		TeachingSubject = teachingSubject;
-	}
 	
 	public String getEmail() {
 		return Email;
@@ -22,10 +12,9 @@ public class Professors extends Users {
 		Email = email;
 	}
 	
-	public Professors(String username, String password, String name, String surname, int department, String email, String teachingSubject) {
-		super(username, password, name, surname, department);		
-		this.setEmail(email);
-		this.setTeachingSubject(teachingSubject);
+	public Professors(int usersID ,String username,  String name, String surname, int department,String role, String email) {
+		super(usersID ,username, name, surname, department ,role);		
+		this.setEmail(email);		
 		//Constructor for the Professors objects.
 	}
 }
