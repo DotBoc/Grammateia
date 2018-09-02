@@ -33,7 +33,8 @@ public class Signup extends HttpServlet {
 
 		if (DBUtils.checkUsername(username)) {
 			if (DBUtils.register(username, password, name, surname, department,"Gram")) {
-				RequestDispatcher rd = request.getRequestDispatcher("Profile");
+				RequestDispatcher rd = request.getRequestDispatcher("GramMenu");
+				request.setAttribute("status","You have succesfully created a Secretary Account");
 				rd.forward(request, response);
 			} else {
 				out.print("Sorry username or password error");
@@ -41,8 +42,8 @@ public class Signup extends HttpServlet {
 				rd.include(request, response);
 			}
 		} else {
-			out.print("Sorry this username is already in use");
-			RequestDispatcher rd = request.getRequestDispatcher("failed.html");
+			RequestDispatcher rd = request.getRequestDispatcher("GramMenu");
+			request.setAttribute("status","Sorry this username is already in use");
 			rd.include(request, response);
 		}
 

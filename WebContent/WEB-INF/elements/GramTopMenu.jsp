@@ -11,7 +11,7 @@
 		</ul></li>
 	<li><a>Functions</a>
 		<ul>
-			<li><a href="signup.jsp">Show Courses</a></li>
+			<li><a href="ShowCourses">Show Courses</a></li>
 			<li><a href="AssignCourse">Assign a Course</a></li>
 		</ul></li>
 	<li><a>Log Out</a></li>
