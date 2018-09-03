@@ -14,5 +14,5 @@
 			<li><a href="ShowCourses">Show Courses</a></li>
 			<li><a href="AssignCourse">Assign a Course</a></li>
 		</ul></li>
-	<li><a>Log Out</a></li>
+	<li><a href="Logout">Log Out</a></li>
 </ul>
