@@ -15,16 +15,17 @@
 			<table>
 				<thead>
 					<tr>
-					
-						<th width="50%">Student Registration Number</th>
-						<th width="50%">Grade</th>
+						<th width="33%">Course Name</th>
+						<th width="34%">Student Registration Number</th>
+						<th width="33%">Grade</th>
 
 					</tr>
 				</thead>
 
 				<c:forEach items="${AllCourses}" var="p">
 
-					<tr>						
+					<tr>		
+						<td>${p.course_name}</td>				
 						<td>${p.registration_number}</td>
 						<td>${p.grade}</td>
 					</tr>

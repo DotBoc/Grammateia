@@ -561,13 +561,14 @@ public class DBUtils {
 			System.out.println("# - Creating List");
 
 			PreparedStatement ps = con.prepareStatement(
-					"select Students.Students_Registration_Number,Grades.Grades_Grade from Students,Students_has_Grades,Grades,Courses where Students_has_Grades.FK_Students_has_Grades_GUser_ID = Students.FK_Students_GUser_ID and FK_Students_has_Grades_Grades_ID=Grades.Grades_ID and Grades.FK_Grades_Courses_ID = Courses.Courses_ID and Courses_ID = ?");
+					"select Courses.Courses_Name , Students.Students_Registration_Number , Grades.Grades_Grade from Students,Students_has_Grades,Grades,Courses where Students_has_Grades.FK_Students_has_Grades_GUser_ID = Students.FK_Students_GUser_ID and FK_Students_has_Grades_Grades_ID=Grades.Grades_ID and Grades.FK_Grades_Courses_ID = Courses.Courses_ID and Courses_ID = ?");
 			ps.setInt(1, course_id);
 			ResultSet rs = ps.executeQuery();
 			System.out.println("# - Query executed");
 
 			while (rs.next()) {
 				Evaluated evaluated = new Evaluated();
+				evaluated.setCourse_name(rs.getString("Courses_Name"));
 				evaluated.setRegistration_number(rs.getString("Students_Registration_Number"));
 				evaluated.setGrade(rs.getFloat("Grades_Grade"));
 				System.out.println("# - Added Evaluated to list");

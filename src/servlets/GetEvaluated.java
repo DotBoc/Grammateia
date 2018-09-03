@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import models.Evaluated;
 import models.Users;
 import utilities.AuthUtils;
 import utilities.DBUtils;
@@ -64,11 +66,20 @@ public class GetEvaluated extends HttpServlet {
 				return;
 			}
 
-			request.setAttribute("user", loginedUser);
-			request.setAttribute("AllCourses", DBUtils.getEvaluated(course_ID));
 			
-			RequestDispatcher dispatcher = request.getRequestDispatcher("PShowEvaluated.jsp");
-			dispatcher.forward(request, response);				
+			
+			if(DBUtils.getEvaluated(course_ID) == null || DBUtils.getEvaluated(course_ID).isEmpty()) {				
+				request.setAttribute("status","There are no records for this course.");
+				RequestDispatcher rd = request.getRequestDispatcher("ProfMenu");
+				rd.forward(request,response);
+			}else {
+				request.setAttribute("user", loginedUser);
+				request.setAttribute("AllCourses", DBUtils.getEvaluated(course_ID));
+				RequestDispatcher dispatcher = request.getRequestDispatcher("PShowEvaluated.jsp");
+				dispatcher.forward(request, response);				
+			}
+			
+			
 			
 	}
 }
