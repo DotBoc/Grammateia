@@ -586,4 +586,109 @@ public class DBUtils {
 
 		return list;
 	}
+
+	public static List<GradedCourses> getStudentGradedCourses(Users user) {
+
+		List<GradedCourses> list = new LinkedList<>();
+
+		try {
+			Connection con = SQLConnUtils.getSQLConnection();
+			System.out.println("# - Creating List");
+
+			PreparedStatement ps = con.prepareStatement(
+					"select Courses.Courses_Name , Grades.Grades_Grade , Courses.Course_Semester from Students,Students_has_Grades,Grades,Courses where Students_has_Grades.FK_Students_has_Grades_GUser_ID = Students.FK_Students_GUser_ID and FK_Students_has_Grades_Grades_ID=Grades.Grades_ID and Grades.FK_Grades_Courses_ID = Courses.Courses_ID and Students.FK_Students_GUser_ID = ? ORDER BY Courses.Course_Semester ASC");
+			ps.setInt(1, user.getUsersID());
+
+			ResultSet rs = ps.executeQuery();
+			System.out.println("# - Query executed");
+
+			while (rs.next()) {
+				GradedCourses course = new GradedCourses();
+				course.setName(rs.getString("Courses_Name"));
+				course.setGrade(rs.getFloat("Grades_Grade"));
+				course.setSemester(rs.getInt("Course_Semester"));
+				System.out.println("# - Added GradedCourses to list");
+
+				list.add(course);
+			}
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	public static List<GradedCourses> getGradesPerSemesters(Users user) {
+
+		List<GradedCourses> list = new LinkedList<>();
+
+		try {
+			Connection con = SQLConnUtils.getSQLConnection();
+			System.out.println("# - Creating List");
+
+			PreparedStatement ps = con.prepareStatement(
+					"select AVG( Grades.Grades_Grade ) as Grades_Grade , Courses.Course_Semester from Students,Students_has_Grades,Grades,Courses where Students_has_Grades.FK_Students_has_Grades_GUser_ID = Students.FK_Students_GUser_ID and FK_Students_has_Grades_Grades_ID=Grades.Grades_ID and Grades.FK_Grades_Courses_ID = Courses.Courses_ID and Students.FK_Students_GUser_ID = ?  Group by Courses.Course_Semester");
+			ps.setInt(1, user.getUsersID());
+
+			ResultSet rs = ps.executeQuery();
+			System.out.println("# - Query executed");
+
+			while (rs.next()) {
+				GradedCourses course = new GradedCourses();
+				course.setGrade(rs.getFloat("Grades_Grade"));
+				course.setSemester(rs.getInt("Course_Semester"));
+				System.out.println("# - Added GradedCourses to list");
+
+				list.add(course);
+			}
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
+	public static List<GradedCourses> getGradesAverage(Users user) {
+
+		List<GradedCourses> list = new LinkedList<>();
+
+		try {
+			Connection con = SQLConnUtils.getSQLConnection();
+			System.out.println("# - Creating List");
+
+			PreparedStatement ps = con.prepareStatement(
+					"select AVG( Grades.Grades_Grade ) as Grades_Grade  from Students,Students_has_Grades,Grades,Courses where Students_has_Grades.FK_Students_has_Grades_GUser_ID = Students.FK_Students_GUser_ID and FK_Students_has_Grades_Grades_ID=Grades.Grades_ID and Grades.FK_Grades_Courses_ID = Courses.Courses_ID and Students.FK_Students_GUser_ID = ?");
+			ps.setInt(1, user.getUsersID());
+
+			ResultSet rs = ps.executeQuery();
+			System.out.println("# - Query executed");
+
+			while (rs.next()) {
+				GradedCourses course = new GradedCourses();
+				course.setGrade(rs.getFloat("Grades_Grade"));				
+				System.out.println("# - Added GradedCourses to list");
+
+				list.add(course);
+			}
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return list;
+	}
 }
