@@ -333,29 +333,6 @@ public class DBUtils {
 		return list;
 	}
 
-	public static boolean enrolltocourse(int uid, int course_id) {
-		boolean success = false;
-		try {
-
-			Connection con = SQLConnUtils.getSQLConnection();
-			PreparedStatement ps = con.prepareStatement("insert into Students_has_Courses values(?,?)");
-			ps.setInt(1, uid);
-			ps.setInt(2, course_id);
-
-			int i = ps.executeUpdate();
-
-			if (i > 0) {
-				success = true;
-				System.out.println("You are sucessfully enrolled to a course");
-			}
-
-		} catch (Exception se) {
-			se.printStackTrace();
-		}
-
-		return success;
-
-	}
 
 	public static List<Professors> getAllProfessors(Users user) {
 

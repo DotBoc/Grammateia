@@ -6,8 +6,7 @@
 		<ul>			
 			<li><a href="StudentsGPCourses">Grades Per Course</a></li>
 			<li><a href="StudentsGPSemester">Grades Per Semester</a></li>
-			<li><a href="StudentsGAverage">Grades Average</a></li>
-			<li><a href="StudentsCourses">Course Registration</a></li>
+			<li><a href="StudentsGAverage">Grades Average</a></li>			
 		</ul></li>
 
 	<li><a>Help</a></li>
